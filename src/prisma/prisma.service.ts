@@ -1,17 +1,18 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PrismaClient } from 'generated/prisma';
 
 @Injectable()
 export class PrismaService extends PrismaClient {
-    constructor() {
+    constructor(private config: ConfigService) {
         super({
             datasources: {
                 db: {
-                    url: "postgresql://postgres:12345678@localhost:5432/nestjs",
+                    url: config.get('DATABASE_URL'),
                 }
 
             }
-        })
+        });
     }
 }
