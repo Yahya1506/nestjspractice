@@ -9,8 +9,19 @@ export class AuthService {
     constructor(private prismaService: PrismaService) {
 
     }
-    login() {
-        return "this is login";
+    async login(dto: AuthDto) {
+
+        const user = await this.prismaService.user.findUnique({
+            where: {
+                email: dto.email
+            }
+        });
+        if (!user) return { message: "email does not exists" };
+
+        const password = await argon.verify(user.password, dto.password);
+        if (!password) return { message: "wrong password" }
+
+        return user;
     }
 
     async signup(dto: AuthDto) {
