@@ -23,6 +23,7 @@ model User {
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   Bookmark  Bookmark[]
+  Session   Session[]
 }
 
 model Bookmark {
@@ -34,4 +35,14 @@ model Bookmark {
   updatedAt   DateTime @updatedAt
   userId      Int
   user        User     @relation(fields: [userId], references: [id])
+}
+
+model Session {
+  id     String @id @default(uuid()) // unique session id (jti in JWT)
+  userId Int // FK to User
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt     DateTime  @default(now())
+  expiresAt     DateTime // when the session naturally expires
+  invalidatedAt DateTime? // set when you log out / revoke
 }
